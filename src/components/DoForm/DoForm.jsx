@@ -1,18 +1,23 @@
 import s from './DoForm.module.css';
 import { nanoid } from 'nanoid';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContactAction } from 'strore/contacts/contactSlice';
-const { useState } = require('react');
+// import { addContactAction } from 'strore/contacts/contactSlice';
+import { useEffect, useState } from 'react';
+import { addContactOperation, fetchContacts } from 'strore/contacts/Operations';
 
 function DoForm() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const dispatch = useDispatch();
   const { contacts } = useSelector(state => state.contacts);
   const addContact = contact => {
-    contacts.some(el => el.name.includes(contact.name))
+    contacts.some(el => el.Name.includes(contact.Name))
       ? alert('This contact is already in the list ')
-      : dispatch(addContactAction(contact));
+      : dispatch(addContactOperation(contact));
   };
   const handleChange = e => {
     if (e.target.name === 'name') {
@@ -23,8 +28,8 @@ function DoForm() {
   const handleSubmit = e => {
     e.preventDefault();
     const contact = {
-      name,
-      number,
+      Name: name,
+      Number: number,
       id: nanoid(),
     };
     addContact(contact);
